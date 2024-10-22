@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
-#
-# Configuration file for the Sphinx documentation builder.
-#
+"""Configuration file for the Sphinx documentation builder."""
+
 # This file does only contain a selection of the most common options. For a
 # full list see the documentation:
 # http://www.sphinx-doc.org/en/master/config
@@ -14,6 +12,7 @@
 #
 import os
 import sys
+from importlib.metadata import version
 
 sys.path.insert(0, os.path.abspath(".."))
 
@@ -21,13 +20,13 @@ sys.path.insert(0, os.path.abspath(".."))
 # -- Project information -----------------------------------------------------
 
 project = "ledgereth"
-copyright = "2022, Mike Shultz"
+copyright = "2024, Mike Shultz"
 author = "Mike Shultz"
 
-# The short X.Y version
-version = "0.9.1"
 # The full version, including alpha/beta/rc tags
-release = "0.9.1"
+release = version("ledgereth")
+# The short X.Y version
+version = ".".join(release.split(".")[:2])
 
 
 # -- General configuration ---------------------------------------------------
@@ -69,7 +68,7 @@ master_doc = "index"
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = "en"
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -95,7 +94,6 @@ html_theme_options = {
     # 'canonical_url': '',
     # 'analytics_id': 'UA-XXXXXXX-1',  #  Provided by Google in your dashboard
     # 'logo_only': False,
-    "display_version": True,
     # 'prev_next_buttons_location': 'bottom',
     # 'style_external_links': False,
     # 'vcs_pageview_mode': '',
@@ -106,6 +104,7 @@ html_theme_options = {
     "navigation_depth": 4,
     "includehidden": True,
     "titles_only": False,
+    "version_selector": True,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -207,6 +206,7 @@ todo_include_todos = True
 
 
 def skip(app, what, name, obj, would_skip, options):
+    """Skip __init__ methods with no docstring."""
     if name == "__init__":
         # Skip if there's no docstring
         return getattr(obj, "__doc__", None) is None
@@ -214,4 +214,5 @@ def skip(app, what, name, obj, would_skip, options):
 
 
 def setup(app):
+    """Setup the Sphinx app."""
     app.connect("autodoc-skip-member", skip)
